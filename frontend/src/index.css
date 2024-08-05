@@ -11,3 +11,58 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+main {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+#wrap {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.ball {
+  position: absolute;
+  border-radius: 50%;
+  animation: implode 1s ease-in-out;
+  animation-fill-mode: both;
+  opacity: 0.5;
+}
+
+@keyframes implode {
+  100% { transform: scale(0); }
+}
+
+
+
+h4,h6 {
+  background: linear-gradient(to right, hsl(0, 0%, 30%) 0, hsl(0, 0%, 60%) 10%, hsl(0, 0%, 30%) 20%);
+  -webkit-background-clip: text;
+    background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 16s infinite linear;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 0;
+  }
+  100% {
+    background-position: 600px;
+  }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: #666; }
+}
+
+.typewriter-text {
+  animation: blink-caret 0.75s step-end infinite;
+}

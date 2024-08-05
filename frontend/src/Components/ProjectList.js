@@ -8,9 +8,9 @@ import TruncatedText from './Truncated';
 
 const Root = styled('div')({
   position: 'relative',
-  minHeight: '100vh',
+  minHeight: '80vh',
   overflow: 'hidden',
-  paddingTop: '100px',
+  paddingTop: '20px',
 });
 
 const AnimatedCard = animated(Card);

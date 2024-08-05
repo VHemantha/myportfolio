@@ -1,69 +1,78 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getBlogs } from '../services/api';
+import { getProjects } from '../services/api';
 import { Container, Card, CardContent, Typography, Grid, CardMedia, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useTransition, animated } from '@react-spring/web';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import TruncatedText from './Truncated';
 
 const Root = styled('div')({
   position: 'relative',
   minHeight: '80vh',
   overflow: 'hidden',
-  paddingTop: '100px',
+  paddingTop: '20px',
 });
 
 const AnimatedCard = animated(Card);
 
-const Blogs = () => {
-  const [blogs, setBlogs] = useState([]);
-  const navigate = useNavigate();
+const ProjectListWeb = () => {
+  const [projects, setProjects] = useState([]);
 
   useEffect(() => {
-    getBlogs()
+    getProjects()
       .then(response => {
-        console.log('blog data:', response.data);
-        setBlogs(response.data);
+        console.log('Projects data:', response.data);
+        const webProjects = response.data.filter(project => project.category === "WEB");
+        setProjects(webProjects);
       })
       .catch(error => console.error('Error fetching projects:', error));
   }, []);
 
-  const transitions = useTransition(blogs, {
+  const transitions = useTransition(projects, {
     from: { opacity: 0, transform: 'translateX(-100%)' },
     enter: { opacity: 1, transform: 'translateX(0)' },
     leave: { opacity: 0, transform: 'translateX(100%)' },
-    keys: blogs => blogs.id,
+    keys: project => project.id,
   });
 
-  const handleSeeMoreClick = (id) => {
-    navigate(`/blog/${id}`);
+  const handleLinkClick = (url, event) => {
+    event.preventDefault();
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://' + url;
+    }
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   return (
     <Root>
       <Container maxWidth="lg">
         <Typography variant="h3" align="center" gutterBottom>
-          My Blogs
+          Web Projects
         </Typography>
         <Grid container spacing={4} justifyContent="center">
           <TransitionGroup component={null}>
-            {transitions((style, blogs) => (
-              <CSSTransition key={blogs.id} timeout={300} classNames="fade">
+            {transitions((style, project) => (
+              <CSSTransition key={project.id} timeout={300} classNames="fade">
                 <Grid item xs={12} sm={6} md={4}>
                   <AnimatedCard style={{ ...style, zIndex: 1 }}>
                     <CardMedia
                       component="img"
                       height="280"
-                      image={blogs.image}
-                      alt={blogs.title}
+                      image={project.image}
+                      alt={project.title}
                       onError={(e) => console.error('Error loading image:', e)}
                     />
                     <CardContent>
                       <Typography variant="h5" component="div">
-                        {blogs.title}
+                        {project.title}
                       </Typography>
-                      <Button onClick={() => handleSeeMoreClick(blogs.id)}>
-                        See More
+                      <TruncatedText text={project.description} maxLength={100} />
+                      <Button 
+                        color="primary"
+                        onClick={(e) => handleLinkClick(project.url, e)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        Visit Website
                       </Button>
                     </CardContent>
                   </AnimatedCard>
@@ -77,4 +86,4 @@ const Blogs = () => {
   );
 };
 
-export default Blogs;
+export default ProjectListWeb;

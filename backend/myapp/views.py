@@ -9,6 +9,10 @@ from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+import logging
+from django.core.mail import send_mail
+from django.conf import settings
+from django.core.mail import EmailMessage
 
 
 class ProjectsViewSet(viewsets.ModelViewSet):
@@ -29,21 +33,43 @@ class BlogDetailView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
     
 
+
+
+logger = logging.getLogger(__name__)
+
 @csrf_exempt
 def send_contact_email(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        name = data.get('name')
-        email = data.get('email')
-        message = data.get('message')
+        try:
+            data = json.loads(request.body)
+            name = data.get('name')
+            email = data.get('email')
+            message = data.get('message')
 
-        # Send email
-        send_mail(
-            f'Contact form submission from {name}',
-            message,
-            email,
-            ['hemanthaviraj6@gmail.com'],  # Replace with your email
-        )
+            if not all([name, email, message]):
+                return JsonResponse({'error': 'Missing required fields'}, status=400)
 
-        return JsonResponse({'message': 'Email sent successfully'})
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+            email_subject = f"Contact Form Submission from {name}"
+            email_body = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
+
+            email = EmailMessage(
+                subject=email_subject,
+                body=email_body,
+                from_email=settings.EMAIL_HOST_USER,
+                to=['hemanthaviraj6@gmail.com'],  # Replace with the intended recipient
+                reply_to=[email]
+            )
+
+            email.send(fail_silently=False)
+            
+            logger.info(f"Email sent successfully for {name}")
+            return JsonResponse({'message': 'Email sent successfully'}, status=200)
+
+        except json.JSONDecodeError:
+            logger.error("Invalid JSON in request body")
+            return JsonResponse({'error': 'Invalid JSON in request body'}, status=400)
+        except Exception as e:
+            logger.error(f"Failed to send email: {str(e)}")
+            return JsonResponse({'error': 'Failed to send email'}, status=500)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)

@@ -1,6 +1,17 @@
 import React, { useState } from 'react';
-import { Container, TextField, Button, Typography, Box } from '@mui/material';
+import { Container, TextField, Typography, Box } from '@mui/material';
 import { submitContactForm } from '../services/api';
+import Button from 'react-bootstrap/Button';
+import { styled } from '@mui/material/styles';
+
+
+const Root = styled('div')({
+  position: 'relative',
+  minHeight: '80vh',
+  overflow: 'hidden',
+  paddingTop: '100px',
+  
+});
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -41,25 +52,33 @@ const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const errors = validateForm();
+    
     if (Object.keys(errors).length === 0) {
+      setSubmitStatus(''); // Clear previous status
+      console.log(formData);
+      
       submitContactForm(formData)
         .then(response => {
-          setSubmitStatus('Email sent successfully!');
+          setSubmitStatus('Message sent successfully!');
           setFormData({ name: '', email: '', message: '' });
         })
         .catch(error => {
           console.error('Error sending email:', error);
-          setSubmitStatus('Failed to send email. Please try again later.');
+          console.error('Error sending email:', error.response);
+          setSubmitStatus('Failed to send Message. Please try again later.');
         });
     } else {
       setFormErrors(errors);
     }
   };
 
+
+
   return (
+    <Root>
     <Container maxWidth="sm" style={{ marginTop: '50px' }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        Contact Us
+        Contact Me
       </Typography>
       <Box component="form" onSubmit={handleSubmit} noValidate>
         <TextField
@@ -103,16 +122,15 @@ const Contact = () => {
           multiline
           rows={4}
         />
-        <Button type="submit" fullWidth variant="contained" color="primary" style={{ marginTop: '20px' }}>
-          Submit
-        </Button>
-        {submitStatus && (
+        <Button type='submit' variant="dark">Submit</Button>
+        {submitStatus && (  
           <Typography variant="body1" color={submitStatus.includes('successfully') ? 'green' : 'red'} style={{ marginTop: '20px' }}>
             {submitStatus}
           </Typography>
         )}
       </Box>
     </Container>
+    </Root>
   );
 };
 

@@ -13,17 +13,19 @@ function NavBar() {
             <Nav.Link href="/">Bio</Nav.Link>
             <Nav.Link href="/blogs">Blog</Nav.Link>
             <NavDropdown title="Projects" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Games</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
+              <NavDropdown.Item href="/projects/games">Games</NavDropdown.Item>
+              <NavDropdown.Item href="/projects/web">
                 Web Applications
               </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Data Science Projects</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">RPA Projects</NavDropdown.Item>
+              <NavDropdown.Item href="/projects/datascience">Data Science Projects</NavDropdown.Item>
+              <NavDropdown.Item href="/projects/RPA">RPA Projects</NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item href="projects">
+              <NavDropdown.Item href="/projects/">
                 All
               </NavDropdown.Item>
             </NavDropdown>
+            <Nav.Link href="/resume">Resume</Nav.Link>
+            <Nav.Link href="/contactme">Contact me</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

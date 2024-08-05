@@ -9,5 +9,5 @@ router.register(r'blogs', BlogsViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('blog/<int:pk>/', BlogDetailView.as_view(), name='blog-detail'),
-    path('contactme/', send_contact_email.as_view(), name='contact'),
+    path('contactme/', send_contact_email, name='contact'),
 ]
