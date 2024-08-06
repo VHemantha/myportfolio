@@ -1,25 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Typography } from '@mui/material';
 
 const TypewriterText = ({ text, variant, sx }) => {
-  const [displayText, setDisplayText] = useState('');
-  const [index, setIndex] = useState(0);
+  const [displayText, setDisplayText] = useState(Array(text.length).fill(''));
+  const [lineIndex, setLineIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
 
   useEffect(() => {
-    if (index < text.length) {
+    if (lineIndex < text.length) {
       const timer = setTimeout(() => {
-        setDisplayText((prevText) => prevText + text[index]);
-        setIndex((prevIndex) => prevIndex + 1);
-      }, 100); // Adjust this value to change typing speed
+        setDisplayText(prev => {
+          const newText = [...prev];
+          newText[lineIndex] = text[lineIndex].substring(0, charIndex + 1);
+          return newText;
+        });
+
+        if (charIndex < text[lineIndex].length - 1) {
+          setCharIndex(charIndex + 1);
+        } else {
+          setLineIndex(lineIndex + 1);  
+          setCharIndex(0);
+        }
+      }, 50);
 
       return () => clearTimeout(timer);
     }
-  }, [index, text]);
+  }, [text, lineIndex, charIndex]);
 
   return (
-    <Typography variant={variant} sx={{ ...sx, borderRight: '0.15em solid #666', whiteSpace: 'nowrap', overflow: 'hidden' }}>
-      {displayText}
-    </Typography>
+    <div style={{ ...sx }}>
+      {displayText.map((line, index) => (
+        <Typography key={index} variant={variant} component="div">
+          {line}
+        </Typography>
+      ))}
+    </div>
   );
 };
 

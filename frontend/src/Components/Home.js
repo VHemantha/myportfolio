@@ -8,6 +8,7 @@ import MouseEffect from './MouseEffect';
 import ProjectList from './ProjectList';
 import Blogs from './Blog';
 import Contact from './contactme';
+import { GlobalStyles } from '@mui/material';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -46,6 +47,16 @@ const CustomSection = styled('div')(({ theme }) => ({
 }));
 
 const Home = () => {
+
+
+  const typewriterLines = [
+    "Viraj Hemantha is a skilled professional with 12 years of experience",
+    "in robotic process automation, data engineering, and financial analysis.",
+    "Proficient in RPA tools, Python, SQL, and data analysis, Viraj excels",
+    "in optimizing workflows and driving efficiency in tech-driven environments."
+  ];
+
+
   const projectListRef = useRef(null);
   const blogsRef = useRef(null);
   const contactRef = useRef(null);
@@ -97,12 +108,21 @@ const Home = () => {
   return (
     <div>
       <Root>
+      <GlobalStyles
+  styles={{
+    body: {
+      margin: 0,
+      padding: 0,
+      overflowX: 'hidden', // Prevent horizontal scrolling
+    },
+  }}
+/>
         <MouseEffect />
         <ContentWrapper>
           <CustomContainer maxWidth="md">
             <CustomAvatar
               alt="Profile Picture"
-              src="path/to/your/profile-picture.jpg"
+              src="/viraj.jfif"
             />
             <div id="os-phrases">
               <Typography className="name" variant="h4" sx={{ marginBottom: 1 }}>
@@ -113,9 +133,16 @@ const Home = () => {
               RPA & AI Engineer
             </Typography>
             <TypewriterText
-              text="Enhance Your Web Experience"
+              text={typewriterLines}
               variant="body1"
-              sx={{ marginBottom: 4 }}
+              sx={{
+                marginBottom: 4,
+                textAlign: 'center',
+                width: '100%', // Use full width of the container
+                maxWidth: '100%', // Ensure it doesn't exceed container width
+                overflowWrap: 'break-word', // Allow long words to break and wrap
+                wordBreak: 'break-word', // Break words if necessary
+              }}
             />
             <Button
               variant="contained"
